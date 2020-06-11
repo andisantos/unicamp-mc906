@@ -9,9 +9,8 @@ n_twins = int(0.04*n_children)
 n_only_child = n_children - n_twins - n_triplets
 
 #  
-population_size = 3
+population_size = 4
 mutation_rate = 0.4
-crossover_rate = 0.4
 max_generations = 500
 pass_threshold = 0.5
 
