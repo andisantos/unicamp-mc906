@@ -95,7 +95,7 @@ def cross_over(generation):
                             new_individual[first_twin:first_twin+2] = individual_1[first_twin]
 
                     else:
-                        if index % 2 == 0:
+                        if index % 2 == (df.n_triplets+df.n_twins) % 2:
                             new_individual[index] = individual_2[index]
                         else:
                             new_individual[index] = individual_1[index]
