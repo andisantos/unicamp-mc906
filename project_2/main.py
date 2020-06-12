@@ -6,7 +6,7 @@ import sys
 
 def create_initial_population():
     solutions = np.asarray([np.random.choice(df.n_gift_types, df.n_children, replace=False) for _ in range(df.population_size)])
-    
+
     for solution in solutions:
         for i in range(0, df.n_triplets, 3):
             solution[i:i+3] = solution[i]
@@ -17,8 +17,6 @@ def create_initial_population():
 
 def fitness(individual, wishlist, gifts):
     ff_value = ff.avg_normalized_happiness(individual, wishlist, gifts)
-    # TODO print only the best
-    print("INDIVIDUAL AVG = ", ff_value)
     return ff_value
 
 def rank_fitness(generation):
@@ -28,6 +26,8 @@ def rank_fitness(generation):
     fitlist = np.asarray([fitness(individual, wishlist, gifts) for individual in generation])
     np.set_printoptions(threshold=sys.maxsize)
     generation = np.asarray([x for _, x in sorted(zip(fitlist, generation), key=itemgetter(0), reverse=True)])
+
+    print("TOP INDIVIDUAL AVG = ", fitness(generation[0], wishlist, gifts))
     return generation
 
 def get_first_triplet(index):
@@ -88,7 +88,7 @@ def cross_over(generation):
                     index = np.where(new_individual == gift)[0][-1]
                     counter1 = count_gifts(individual_1)
                     counter2 = count_gifts(individual_2)
-                    actual_counter = count_gifts(new_individual) 
+                    actual_counter = count_gifts(new_individual)
 
                     if index < df.n_triplets:
                         first_triplet = get_first_triplet(index)
@@ -110,18 +110,18 @@ def cross_over(generation):
                         if (index // 2) % 2 == 0:
                             filtered_gifts = np.where((counter1-actual_counter) >= 2)[0]
                             chosen = np.random.choice(filtered_gifts,1)[0]
-                            new_individual[first_twin:first_twin+2] = chosen 
+                            new_individual[first_twin:first_twin+2] = chosen
                         else:
                             filtered_gifts = np.where((counter2-actual_counter) >= 2)[0]
                             chosen = np.random.choice(filtered_gifts,1)[0]
-                            new_individual[first_twin:first_twin+2] = chosen 
+                            new_individual[first_twin:first_twin+2] = chosen
 
                     else:
                         # Check if only child's parity is equal to the index being checked
                         if index % 2 == (df.n_triplets+df.n_twins) % 2:
                             filtered_gifts = np.where((counter1-actual_counter) >= 1)[0]
                             chosen = np.random.choice(filtered_gifts,1)[0]
-                            new_individual[index] = chosen 
+                            new_individual[index] = chosen
                         else:
                             filtered_gifts = np.where((counter2-actual_counter) >= 1)[0]
                             chosen = np.random.choice(filtered_gifts,1)[0]
@@ -134,11 +134,11 @@ def cross_over(generation):
 
 def mutation(current_generation):
     cut_off = int(df.pass_threshold * df.population_size)
-    
+
     # for each individual to be mutated(?)
     for individual in range(cut_off,df.population_size):
         random_number = np.random.rand(df.n_children)
-        count = count_gifts(current_generation[individual]) 
+        count = count_gifts(current_generation[individual])
 
         for child in range(df.n_children):
             # Randomly decides if it should mutate this child's gift
@@ -171,8 +171,8 @@ if __name__ == "__main__":
     for i in range(df.max_generations):
         print('Geração ', i)
         current_generation = rank_fitness(current_generation)
-        print('Cross over')
         current_generation = cross_over(current_generation)
-        print('Mutaiton')
         current_generation = mutation(current_generation)
 
+    current_generation = rank_fitness(current_generation)
+    print(current_generation[0])
