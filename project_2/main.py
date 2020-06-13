@@ -46,8 +46,14 @@ def rank_fitness(generation):
     fitlist = np.asarray([fitness(individual, wishlist, gifts) for individual in generation])
     np.set_printoptions(threshold=sys.maxsize)
     generation = np.asarray([x for _, x in sorted(zip(fitlist, generation), key=itemgetter(0), reverse=True)])
+    
+    with open('averages_'+df.configs+'.txt','a') as f:
+        f.write(str(np.average(fitlist))+'\n')
+    with open('maxs_'+df.configs+'.txt','a') as f:
+        f.write(str(np.max(fitlist))+'\n')
+    with open('mins_'+df.configs+'.txt','a') as f:
+        f.write(str(np.min(fitlist))+'\n')
 
-    print("TOP INDIVIDUAL AVG = ", fitness(generation[0], wishlist, gifts))
     return generation
 
 def get_first_triplet(index):
