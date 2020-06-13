@@ -1,14 +1,25 @@
 import matplotlib.pyplot as plt
 import defines as df
 import numpy as np
+from os import listdir
 
-averages = np.loadtxt('averages_'+df.configs+'.txt', dtype=np.float, delimiter='\n')
-maxs = np.loadtxt('maxs_'+df.configs+'.txt', dtype=np.float, delimiter='\n')
-mins = np.loadtxt('mins_'+df.configs+'.txt', dtype=np.float, delimiter='\n')
 
-fig, ax = plt.subplots()
-ax.plot(range(df.max_generations+1), averages, '-')
-ax.plot(range(df.max_generations+1), mins, '-', color="#011254")
-ax.plot(range(df.max_generations+1), maxs, '-', color="#0294dd")
-ax.fill_between(range(df.max_generations+1), mins, maxs, alpha=0.2)
-plt.show()
+for directory in listdir('outputs/'):
+
+    averages = np.loadtxt('outputs/'+directory+'/averages.txt', dtype=np.float, delimiter='\n')
+    maxs = np.loadtxt('outputs/'+directory+'/maxs.txt', dtype=np.float, delimiter='\n')
+    mins = np.loadtxt('outputs/'+directory+'/mins.txt', dtype=np.float, delimiter='\n')
+
+
+    fig, ax = plt.subplots()
+    ax.plot(range(df.max_generations+1), maxs, '-', color="#0294dd", label='Adequação máxima')
+    ax.plot(range(df.max_generations+1), averages, '-',color="#0e2795", label='Adequação média')
+    ax.plot(range(df.max_generations+1), mins, '-', color="#011254", label='Adequação mínima')
+    ax.fill_between(range(df.max_generations+1), mins, maxs, alpha=0.2)
+    
+    # Styling the graph
+    ax.set_xlabel('Gerações')
+    ax.set_ylabel('Adequação')
+    plt.legend(loc='lower right')
+
+    plt.savefig('outputs/'+directory+'/plot.png', dpi=600)

@@ -3,6 +3,7 @@ import defines as df
 import fitness_function as ff
 from operator import itemgetter
 import sys
+import os
 
 def create_initial_population():
     solutions = np.zeros((df.population_size, df.n_children), dtype=np.int32)
@@ -47,11 +48,13 @@ def rank_fitness(generation):
     np.set_printoptions(threshold=sys.maxsize)
     generation = np.asarray([x for _, x in sorted(zip(fitlist, generation), key=itemgetter(0), reverse=True)])
     
-    with open('averages_'+df.configs+'.txt','a') as f:
+    if not os.path.exists('outputs/'+df.configs):
+        os.makedirs('outputs/'+df.configs)
+    with open('outputs/'+df.configs+'/averages.txt','a') as f:
         f.write(str(np.average(fitlist))+'\n')
-    with open('maxs_'+df.configs+'.txt','a') as f:
+    with open('outputs/'+df.configs+'/maxs.txt','a') as f:
         f.write(str(np.max(fitlist))+'\n')
-    with open('mins_'+df.configs+'.txt','a') as f:
+    with open('outputs/'+df.configs+'/mins.txt','a') as f:
         f.write(str(np.min(fitlist))+'\n')
 
     return generation
