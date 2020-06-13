@@ -1,6 +1,10 @@
-#
+# CHANGE THESE
 n_gift_types = 20
+population_size = 100
+mutation_rate = 0.05
+pass_threshold = 0.2
 
+# DON'T CHANGE BELOW :)
 gift_quantity = n_gift_types
 n_children = n_gift_types*gift_quantity
 n_wishlist = 8
@@ -10,11 +14,7 @@ n_triplets = 3*int(0.005*n_children)
 n_twins = 2*int(0.04*n_children)
 n_only_child = n_children - n_twins - n_triplets
 
-#
-population_size = 100
-mutation_rate = 0.05
-max_generations = 1000
-pass_threshold = 0.2
+max_generations = 2000
 
 # defines for fitness_function
 ratio_gift_happiness = 2
