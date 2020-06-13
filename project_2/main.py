@@ -217,7 +217,6 @@ if __name__ == "__main__":
     for i in range(df.max_generations):
         print('Geração ', i)
         current_generation = rank_fitness(current_generation)
-        print(current_generation[0])
         current_generation = cross_over(current_generation)
         current_generation = mutation(current_generation)
 
