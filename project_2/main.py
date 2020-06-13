@@ -4,6 +4,7 @@ import fitness_function as ff
 from operator import itemgetter
 import sys
 import os
+import time
 
 def create_initial_population():
     solutions = np.zeros((df.population_size, df.n_children), dtype=np.int32)
@@ -222,7 +223,7 @@ if __name__ == "__main__":
     print("Only:", df.n_children-df.n_twins-df.n_triplets)
 
     current_generation = create_initial_population()
-
+    start = time.time()
     for i in range(df.max_generations):
         print('Geração ', i)
         current_generation = rank_fitness(current_generation)
@@ -231,3 +232,5 @@ if __name__ == "__main__":
 
     current_generation = rank_fitness(current_generation)
     print(current_generation[0])
+    time_elapsed = time.time() - start
+    print("AVG TIME ELAPSED: {0}".format(str(time_elapsed/df.max_generations)))
