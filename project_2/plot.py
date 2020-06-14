@@ -5,6 +5,7 @@ from os import listdir
 
 
 for directory in listdir('outputs/'):
+    print("Plotting " + directory)
 
     averages = np.loadtxt('outputs/'+directory+'/averages.txt', dtype=np.float, delimiter='\n')
     maxs = np.loadtxt('outputs/'+directory+'/maxs.txt', dtype=np.float, delimiter='\n')
