@@ -38,8 +38,19 @@ def create_initial_population():
     return solutions
 
 def fitness(individual, wishlist, gifts):
-    ff_value = ff.avg_normalized_happiness(individual, wishlist, gifts)
-    return ff_value
+    score = 0
+    for child, gift in enumerate(individual):
+        try:
+            wishlist_score = df.n_wishlist - np.where(wishlist[child] == gift)[0][0]
+        except:
+            wishlist_score = -df.n_wishlist
+
+        gifts_score = df.n_gift_types - np.where(gifts[child] == gift)[0][0]
+
+        total_score = (wishlist_score/df.n_wishlist) + (gifts_score/df.n_gift_types)
+        score += total_score/2
+
+    return score/df.n_children
 
 def rank_fitness(generation):
     gifts = np.loadtxt("dataset/gifts_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")
@@ -48,7 +59,7 @@ def rank_fitness(generation):
     fitlist = np.asarray([fitness(individual, wishlist, gifts) for individual in generation])
     np.set_printoptions(threshold=sys.maxsize)
     generation = np.asarray([x for _, x in sorted(zip(fitlist, generation), key=itemgetter(0), reverse=True)])
-    
+
     if not os.path.exists('outputs/'+df.configs):
         os.makedirs('outputs/'+df.configs)
     with open('outputs/'+df.configs+'/averages.txt','a') as f:
