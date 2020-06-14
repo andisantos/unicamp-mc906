@@ -39,17 +39,22 @@ def create_initial_population():
 
 def fitness(individual, wishlist, gifts):
     score = 0
+
     for child, gift in enumerate(individual):
+        # Check if the gift is on child whishlist.
+        # Computes its score based on position. 
         try:
             wishlist_score = df.n_wishlist - np.where(wishlist[child] == gift)[0][0]
         except:
             wishlist_score = -df.n_wishlist
 
+        # Compute gift happines score score based on position.
         gifts_score = df.n_gift_types - np.where(gifts[child] == gift)[0][0]
 
         total_score = (wishlist_score/df.n_wishlist) + (gifts_score/df.n_gift_types)
         score += total_score/2
 
+    # total score is the mean of child and gift happiness
     return score/df.n_children
 
 def rank_fitness(generation):
