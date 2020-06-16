@@ -1,12 +1,10 @@
-import numpy as np
-import defines as df
-from operator import itemgetter
-import sys
-import os
 import time
+import numpy as np
 
-import mutation as mutation
-import crossover as crossover
+import defines as df
+import mutation
+import crossover
+import fitness_function as ff
 
 def create_initial_population():
     solutions = np.zeros((df.population_size, df.n_children), dtype=np.int32)
@@ -39,45 +37,6 @@ def create_initial_population():
 
     return solutions
 
-def fitness(individual, wishlist, gifts):
-    score = 0
-
-    for child, gift in enumerate(individual):
-        # Check if the gift is on child whishlist.
-        # Computes its score based on position. 
-        try:
-            wishlist_score = df.n_wishlist - np.where(wishlist[child] == gift)[0][0]
-        except:
-            wishlist_score = -df.n_wishlist
-
-        # Compute gift happines score score based on position.
-        gifts_score = df.n_gift_types - np.where(gifts[child] == gift)[0][0]
-
-        total_score = (wishlist_score/df.n_wishlist) + (gifts_score/df.n_gift_types)
-        score += total_score/2
-
-    # total score is the mean of child and gift happiness
-    return score/df.n_children
-
-def rank_fitness(generation):
-    gifts = np.loadtxt("dataset/gifts_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")
-    wishlist = np.loadtxt("dataset/wishlist_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")
-
-    fitlist = np.asarray([fitness(individual, wishlist, gifts) for individual in generation])
-    np.set_printoptions(threshold=sys.maxsize)
-    generation = np.asarray([x for _, x in sorted(zip(fitlist, generation), key=itemgetter(0), reverse=True)])
-
-    if not os.path.exists('outputs/'+df.configs):
-        os.makedirs('outputs/'+df.configs)
-    with open('outputs/'+df.configs+'/averages.txt','a') as f:
-        f.write(str(np.average(fitlist))+'\n')
-    with open('outputs/'+df.configs+'/maxs.txt','a') as f:
-        f.write(str(np.max(fitlist))+'\n')
-    with open('outputs/'+df.configs+'/mins.txt','a') as f:
-        f.write(str(np.min(fitlist))+'\n')
-
-    return generation
-
 if __name__ == "__main__":
     print("Triplets:", df.n_triplets)
     print("Twins:", df.n_twins)
@@ -85,14 +44,26 @@ if __name__ == "__main__":
 
     current_generation = create_initial_population()
     start = time.time()
-    for i in range(df.max_generations):
-        print('Geração ', i)
-        current_generation = rank_fitness(current_generation)
-        current_generation = crossover.uniform_cross_over(current_generation)
-        # current_generation = crossover.single_point_cross_over(current_generation)
-        current_generation = mutation.mutation(current_generation)
 
-    current_generation = rank_fitness(current_generation)
-    print(current_generation[0])
+    if df.stop_by_generations:
+        for i in range(df.max_generations):
+            print('Geração ', i)
+            current_generation = ff.rank_fitness(current_generation)
+            current_generation = crossover.uniform_cross_over(current_generation)
+            current_generation = mutation.mutation(current_generation)
+    else:
+        current_fitness = 0
+        i = 0
+        while current_fitness < df.goal_fitness:
+            print('Geração ', i)
+            print('Fitness ', current_fitness)
+            current_generation, current_fitness = ff.roulette_fitness(current_generation)
+            current_generation = crossover.single_point_cross_over(current_generation)
+            current_generation = mutation.mutation(current_generation)
+            i += 1
+
+
+    #current_generation = rank_fitness(current_generation)
+    #print(current_generation[0])
     time_elapsed = time.time() - start
     print("AVG TIME ELAPSED: {0}".format(str(time_elapsed/df.max_generations)))

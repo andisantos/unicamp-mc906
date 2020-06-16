@@ -3,6 +3,8 @@ n_gift_types = 20
 population_size = 100
 mutation_rate = 0.05
 pass_threshold = 0.2
+stop_by_generations = False
+goal_fitness = 0.2
 
 # DON'T CHANGE BELOW :)
 gift_quantity = n_gift_types
