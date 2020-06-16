@@ -24,3 +24,4 @@ for directory in listdir('outputs/'):
     plt.legend(loc='lower right')
 
     plt.savefig('outputs/'+directory+'/plot.png', dpi=600)
+    plt.close()
