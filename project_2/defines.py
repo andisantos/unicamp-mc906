@@ -23,4 +23,4 @@ ratio_gift_happiness = 2
 ratio_child_happiness = 2
 
 # filename config
-configs = str(n_gift_types)+'_'+str(population_size)+'_'+str(mutation_rate)+'_'+str(max_generations)+'_'+str(pass_threshold)
+configs = str(n_gift_types)+'_'+str(population_size)+'_'+str(mutation_rate)+'_'+str(max_generations)+'_'+str(pass_threshold)+'_'+str(stop_by_generations)
