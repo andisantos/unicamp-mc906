@@ -47,6 +47,16 @@ def roulette_fitness(generation): #no pain no gain
     gifts = np.loadtxt("dataset/gifts_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")
     wishlist = np.loadtxt("dataset/wishlist_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")
     fitlist = np.asarray([fitness(individual, wishlist, gifts) for individual in generation])
+    
+    if not os.path.exists('outputs/'+df.configs):
+        os.makedirs('outputs/'+df.configs)
+    with open('outputs/'+df.configs+'/averages.txt','a') as f:
+        f.write(str(np.average(fitlist))+'\n')
+    with open('outputs/'+df.configs+'/maxs.txt','a') as f:
+        f.write(str(np.max(fitlist))+'\n')
+    with open('outputs/'+df.configs+'/mins.txt','a') as f:
+        f.write(str(np.min(fitlist))+'\n')
+    
     fitprob = fitlist / np.sum(fitlist)
     
     indexes = np.random.choice(df.population_size,df.population_size,p=fitprob)
@@ -56,5 +66,6 @@ def roulette_fitness(generation): #no pain no gain
     
     max_index = np.argmax(fitlist)
     new_generation[0], new_generation[max_index] = new_generation[max_index], new_generation[0]
-    
+
+
     return new_generation, fitlist[max_index] 

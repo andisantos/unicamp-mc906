@@ -51,6 +51,8 @@ if __name__ == "__main__":
             current_generation = ff.rank_fitness(current_generation)
             current_generation = crossover.uniform_cross_over(current_generation)
             current_generation = mutation.mutation(current_generation)
+        time_elapsed = time.time() - start
+        print("AVG TIME ELAPSED: {0}".format(str(time_elapsed/df.max_generations)))
     else:
         current_fitness = 0
         i = 0
@@ -61,9 +63,5 @@ if __name__ == "__main__":
             current_generation = crossover.single_point_cross_over(current_generation)
             current_generation = mutation.mutation(current_generation)
             i += 1
-
-
-    #current_generation = rank_fitness(current_generation)
-    #print(current_generation[0])
-    time_elapsed = time.time() - start
-    print("AVG TIME ELAPSED: {0}".format(str(time_elapsed/df.max_generations)))
+        time_elapsed = time.time() - start
+        print("AVG TIME ELAPSED: {0}".format(str(time_elapsed/i)))
