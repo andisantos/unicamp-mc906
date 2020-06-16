@@ -102,9 +102,7 @@ def uniform_cross_over(generation):
 
 def single_point_cross_over(generation):
 
-    # variable to get the half highest individuals to 
-    # use as parents on cross-over
-    cut_off = df.population_size//2
+    cut_off = int(df.pass_threshold * df.population_size)
     
     # cromossomes from 0 to single point index comes from indivudal_1
     # rest comes from individual_2
