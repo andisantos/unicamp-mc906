@@ -13,10 +13,10 @@ for directory in listdir('outputs/'):
 
 
     fig, ax = plt.subplots()
-    ax.plot(range(df.max_generations+1), maxs, '-', color="#0294dd", label='Adequação máxima')
-    ax.plot(range(df.max_generations+1), averages, '-',color="#0e2795", label='Adequação média')
-    ax.plot(range(df.max_generations+1), mins, '-', color="#011254", label='Adequação mínima')
-    ax.fill_between(range(df.max_generations+1), mins, maxs, alpha=0.2)
+    ax.plot(range(df.max_generations), maxs, '-', color="#0294dd", label='Adequação máxima')
+    ax.plot(range(df.max_generations), averages, '-',color="#0e2795", label='Adequação média')
+    ax.plot(range(df.max_generations), mins, '-', color="#011254", label='Adequação mínima')
+    ax.fill_between(range(df.max_generations), mins, maxs, alpha=0.2)
     
     # Styling the graph
     ax.set_xlabel('Gerações')
