@@ -57,6 +57,7 @@ def roulette_fitness(generation): #no pain no gain
     with open('outputs/'+df.configs+'/mins.txt','a') as f:
         f.write(str(np.min(fitlist))+'\n')
     
+    fitlist = fitlist.clip(min=0)
     fitprob = fitlist / np.sum(fitlist)
     
     indexes = np.random.choice(df.population_size,df.population_size,p=fitprob)
