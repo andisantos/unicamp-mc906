@@ -48,7 +48,7 @@ if __name__ == "__main__":
     if df.stop_by_generations:
         for i in range(df.max_generations):
             print('Geração ', i)
-            current_generation, _ = ff.rank_fitness(current_generation)
+            current_generation, _ = ff.roulette_fitness(current_generation)
             current_generation = crossover.uniform_cross_over(current_generation)
             current_generation = mutation.mutation(current_generation)
         time_elapsed = time.time() - start
@@ -59,8 +59,8 @@ if __name__ == "__main__":
         while current_fitness < df.goal_fitness:
             print('Geração ', i)
             print('Fitness ', current_fitness)
-            current_generation, current_fitness = ff.roulette_fitness(current_generation)
-            current_generation = crossover.single_point_cross_over(current_generation)
+            current_generation, current_fitness = ff.rank_fitness(current_generation)
+            current_generation = crossover.uniform_cross_over(current_generation)
             current_generation = mutation.mutation(current_generation)
             i += 1
         time_elapsed = time.time() - start
