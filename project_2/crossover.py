@@ -121,56 +121,97 @@ def single_point_cross_over(generation):
             new_individual[j] = individual_1[j]
             counter[individual_1[j]] += 1
 
-        modified_index = j
-        # is possible that only part of the triplets were copied
-        if (df.n_triplets % single_point) != 0:
-            first_triplet = get_first_triplet(single_point-1)
-            new_individual[first_triplet:first_triplet+3] = individual_1[j-1]
+        modified_index = single_point
 
-            # if only one was copied, two more gifts needs to be counted
-            # otherwise only one
-            if (single_point - first_triplet) == 2:
+        if single_point < df.n_triplets:
+            # is possible that only part of the triplets were copied
+            if single_point != get_first_triplet(single_point):
+                first_triplet = get_first_triplet(single_point)
+                new_individual[first_triplet:first_triplet+3] = individual_1[j-1]
+
+                # if only one was copied, two more gifts needs to be counted
+                # otherwise only one
+                if (single_point - first_triplet) == 2:
+                    counter[individual_1[j]] += 1
+                else:
+                    counter[individual_1[j]] += 2
+
+                modified_index = first_triplet + 3
+        elif df.n_triplets <= single_point < df.n_triplets+df.n_twins:
+            # same with twins
+            if single_point != get_first_twin(single_point):
+                first_twin = get_first_twin(single_point)
+                new_individual[first_twin:first_twin+2] = individual_1
                 counter[individual_1[j]] += 1
-            else:
-                counter[individual_1[j]] += 2
 
-            modified_index = first_triplet + 3
-        # same with twins
-        elif (df.n_twins % single_point) != 0:
-            first_twin = get_first_twin(single_point-1)
-            new_individual[first_twin:first_twin+2] = individual_1
-
-            counter[individual_1[j]] += 1
-            modified_index = first_twin + 2
+                modified_index = first_twin + 2
 
         # copy the rest of the gifts from individual 2, if possible
-        for j in range(modified_index, df.n_children):
+        if modified_index < df.n_triplets:
             # crossover triplets
-            if j < df.n_triplets:
-                if counter[individual_2[j]] <= df.n_gift_types - 3:
-                    new_individual[j:j+3] = individual_2[j]
-                    counter[individual_2[j]] += 3
-                else:
-                    gift = np.where(counter <= df.gift_quantity - 3)[0][0]
-                    new_individual[j:j+3] = gift
-                    counter[gift] += 3
+            for j in range(modified_index, df.n_triplets, 3):
+                # crossover triplets
+                if j < df.n_triplets:
+                    if counter[individual_2[j]] <= df.n_gift_types - 3:
+                        new_individual[j:j+3] = individual_2[j]
+                        counter[individual_2[j]] += 3
+                    else:
+                        gift = np.where(counter <= df.gift_quantity - 3)[0][0]
+                        new_individual[j:j+3] = gift
+                        counter[gift] += 3
             
             # crossover twins
-            if df.n_triplets <= j < df.n_triplets+df.n_twins:
-                if counter[individual_2[j]] <= df.n_gift_types - 2:
-                    new_individual[j:j+2] = individual_2[j]
-                    counter[individual_2[j]] += 2
-                else:
-                    gift = np.where(counter <= df.gift_quantity - 2)[0][0]
-                    new_individual[j:j+2] = gift
-                    counter[gift] += 2
+            for j in range(df.n_triplets, df.n_triplets+df.n_twins, 2):
+                if df.n_triplets <= j < df.n_triplets+df.n_twins:
+                    if counter[individual_2[j]] <= df.n_gift_types - 2:
+                        new_individual[j:j+2] = individual_2[j]
+                        counter[individual_2[j]] += 2
+                    else:
 
-            # crossover only-childe
-            else:
+                        gift = np.where(counter <= df.gift_quantity - 2)[0][0]
+                        new_individual[j:j+2] = gift
+                        counter[gift] += 2
+
+            # crossover only-child
+            for j in range(df.n_triplets+df.n_twins, df.n_children):
+                if counter[individual_2[j]] <= df.n_gift_types - 1: 
+                    new_individual[j] = individual_2[j]
+                    counter[individual_2[j]] += 1
+                else:                    
+                    gift = np.where(counter <= df.gift_quantity - 1)[0][0]
+                    new_individual[j] = gift
+                    counter[gift] += 1
+        elif df.n_triplets <= modified_index < df.n_triplets+df.n_twins:
+            # crossover twins
+            for j in range(modified_index, df.n_triplets+df.n_twins, 2):
+                if df.n_triplets <= j < df.n_triplets+df.n_twins:
+                    if counter[individual_2[j]] <= df.n_gift_types - 2:
+                        new_individual[j:j+2] = individual_2[j]
+                        counter[individual_2[j]] += 2
+                    else:
+                        gift = np.where(counter <= df.gift_quantity - 2)[0][0]
+                        new_individual[j:j+2] = gift
+                        counter[gift] += 2
+
+            # crossover only-child
+            for j in range(df.n_triplets+df.n_twins, df.n_children):
                 if counter[individual_2[j]] <= df.n_gift_types - 1:
                     new_individual[j] = individual_2[j]
                     counter[individual_2[j]] += 1
                 else:
+                    
+                    gift = np.where(counter <= df.gift_quantity - 1)[0][0]
+                    new_individual[j] = gift
+                    counter[gift] += 1
+        else:
+            # crossover only-child
+            for j in range(modified_index, df.n_children):
+                if counter[individual_2[j]] <= df.n_gift_types - 1:
+
+                    new_individual[j] = individual_2[j]
+                    counter[individual_2[j]] += 1
+                else:
+                    
                     gift = np.where(counter <= df.gift_quantity - 1)[0][0]
                     new_individual[j] = gift
                     counter[gift] += 1
