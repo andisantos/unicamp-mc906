@@ -1,10 +1,8 @@
 # CHANGE THESE
-n_gift_types = 20
-population_size = 100
+n_gift_types = 25
+population_size = 200
 mutation_rate = 0.05
-pass_threshold = 0.2
-stop_by_generations = False
-goal_fitness = 0.2
+pass_threshold = 0.5
 
 # DON'T CHANGE BELOW :)
 gift_quantity = n_gift_types
@@ -16,6 +14,9 @@ n_triplets = 3*int(0.005*n_children)
 n_twins = 2*int(0.04*n_children)
 n_only_child = n_children - n_twins - n_triplets
 
+# Stop criteria
+stop_by_generations = False
+goal_fitness = 0.36
 max_generations = 2000
 
 # defines for fitness_function

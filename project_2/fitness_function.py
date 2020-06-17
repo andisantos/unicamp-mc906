@@ -41,7 +41,7 @@ def rank_fitness(generation):
     with open('outputs/'+df.configs+'/mins.txt','a') as f:
         f.write(str(np.min(fitlist))+'\n')
 
-    return generation
+    return generation, fitlist[0]
 
 def roulette_fitness(generation): #no pain no gain
     gifts = np.loadtxt("dataset/gifts_"+str(df.n_children)+".csv", dtype=np.int32, delimiter=",")

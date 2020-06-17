@@ -48,7 +48,7 @@ if __name__ == "__main__":
     if df.stop_by_generations:
         for i in range(df.max_generations):
             print('Geração ', i)
-            current_generation = ff.rank_fitness(current_generation)
+            current_generation, _ = ff.rank_fitness(current_generation)
             current_generation = crossover.uniform_cross_over(current_generation)
             current_generation = mutation.mutation(current_generation)
         time_elapsed = time.time() - start
