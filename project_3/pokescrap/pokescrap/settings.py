@@ -68,7 +68,7 @@ ITEM_PIPELINES = {
     'pokescrap.pipelines.PokescrapPipeline': 1,
 }
 
-IMAGES_STORE = 'images/rename'
+FILES_STORE = 'images/pngs'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

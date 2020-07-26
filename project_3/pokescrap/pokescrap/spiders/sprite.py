@@ -4,8 +4,8 @@ import scrapy
 class MyItem(scrapy.Item):
 
     # ... other item fields ...
-    image_urls = scrapy.Field()
-    images = scrapy.Field()
+    file_urls = scrapy.Field()
+    files = scrapy.Field()
     image_names = scrapy.Field()
     pass
     
@@ -25,7 +25,7 @@ class SpriteSpider(scrapy.Spider):
     def parse_img(item, response):
         img_list = response.css("img::attr(src)").getall()
         item = MyItem()
-        item['image_urls'] = img_list
+        item['file_urls'] = img_list
         item['image_names'] = ['-'.join(name.split('/')[4:]) for name in img_list]
         # for i in img_list:
         #     yield {'img' : i}

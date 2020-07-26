@@ -7,16 +7,16 @@
 import scrapy
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from scrapy.pipelines.images import ImagesPipeline
+from scrapy.pipelines.files import FilesPipeline
 
-class PokescrapPipeline(ImagesPipeline):
+class PokescrapPipeline(FilesPipeline):
     def file_path(self, request, response=None, info=None):
         return request.meta.get('filename','')
 
     def get_media_requests(self, item, info):
-        for image_url in item['image_urls']:
+        for image_url in item['file_urls']:
             splits = image_url.split('/')
-            meta = {'filename': splits[-1][:-4] +'-'+ '-'.join(splits[4:-1])+'.jpg'}
+            meta = {'filename': splits[-1][:-4] +'-'+ '-'.join(splits[4:-1])+'.png'}
             yield scrapy.Request(url=image_url, meta=meta)
     
     def item_completed(self, results, item, info):
