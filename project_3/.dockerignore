@@ -1,0 +1,6 @@
+tensorboard/
+checkpoints/
+pokescrap/
+dataset/
+*.ipynb
+pokedex.json

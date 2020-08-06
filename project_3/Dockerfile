@@ -5,10 +5,10 @@ RUN apt-get update && apt-get install --yes \
     python3-matplotlib \
     python3-seaborn \
     python3-pillow \
+    python3-pip \
     vim \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/
 
-COPY project_3 /source
-WORKDIR project_3
+RUN pip3 install tqdm==4.48.2 opencv-python==4.3.0.36
